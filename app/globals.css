@@ -1,0 +1,342 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────── Tokens ───────── */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #090a0c;
+  --fg: #f5f5f7;
+  --fg-muted: #98989f;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --muted-surface: rgba(255, 255, 255, 0.035);
+
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --glass-bg-strong: rgba(255, 255, 255, 0.085);
+  --glass-bg-deep: rgba(24, 26, 31, 0.62);
+  --glass-border: rgba(255, 255, 255, 0.13);
+  --glass-highlight: rgba(255, 255, 255, 0.16);
+  --glass-sheen: rgba(255, 255, 255, 0.075);
+  --glass-inner-shadow: rgba(0, 0, 0, 0.35);
+  --glass-ring: rgba(0, 0, 0, 0);
+  --glass-shadow: rgba(0, 0, 0, 0.55);
+  --glass-fallback: #17191d;
+
+  --input-bg: rgba(0, 0, 0, 0.28);
+  --focus: rgba(255, 255, 255, 0.55);
+  --accent: #f5f5f7;
+  --accent-fg: #0b0d10;
+  --verified: #20d5ec;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --bad: #f87171;
+
+  --ambient:
+    radial-gradient(55% 45% at 12% -5%, rgba(255, 255, 255, 0.075), transparent 70%),
+    radial-gradient(40% 35% at 92% 28%, rgba(165, 180, 205, 0.06), transparent 70%),
+    radial-gradient(50% 40% at 50% 108%, rgba(255, 255, 255, 0.045), transparent 70%);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eceef1;
+  --fg: #111317;
+  --fg-muted: #5c6370;
+  --hairline: rgba(18, 24, 32, 0.1);
+  --muted-surface: rgba(255, 255, 255, 0.4);
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-bg-deep: rgba(250, 251, 252, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --glass-sheen: rgba(255, 255, 255, 0.7);
+  --glass-inner-shadow: rgba(25, 35, 50, 0.06);
+  --glass-ring: rgba(18, 24, 32, 0.07);
+  --glass-shadow: rgba(25, 35, 50, 0.16);
+  --glass-fallback: #f6f7f9;
+
+  --input-bg: rgba(255, 255, 255, 0.55);
+  --focus: rgba(17, 19, 23, 0.55);
+  --accent: #111317;
+  --accent-fg: #f5f5f7;
+  --verified: #0a9fb5;
+  --ok: #15803d;
+  --warn: #b45309;
+  --bad: #b91c1c;
+
+  --ambient:
+    radial-gradient(55% 45% at 12% -5%, rgba(255, 255, 255, 0.95), transparent 70%),
+    radial-gradient(40% 35% at 92% 28%, rgba(190, 200, 215, 0.4), transparent 70%),
+    radial-gradient(50% 40% at 50% 108%, rgba(255, 255, 255, 0.7), transparent 70%);
+}
+
+/* ───────── Base ───────── */
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Ambient light sits behind everything so glass has something to pick up. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--ambient);
+  pointer-events: none;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+::selection {
+  background: var(--glass-highlight);
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────── Liquid Glass materials ───────── */
+@layer components {
+  /* Primary Glass — main panels */
+  .glass-panel {
+    position: relative;
+    background: linear-gradient(155deg, var(--glass-sheen) 0%, transparent 38%), var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    backdrop-filter: blur(32px) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      inset 0 -1px 0 var(--glass-inner-shadow),
+      0 0 0 0.5px var(--glass-ring),
+      0 1px 2px rgba(0, 0, 0, 0.12),
+      0 28px 56px -16px var(--glass-shadow);
+  }
+
+  /* Soft Glass — secondary information */
+  .glass-surface {
+    background: linear-gradient(160deg, var(--glass-sheen) 0%, transparent 30%), var(--muted-surface);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: blur(24px) saturate(150%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      0 0 0 0.5px var(--glass-ring);
+  }
+
+  /* Floating Glass — navbar, search */
+  .glass-floating {
+    position: relative;
+    background:
+      linear-gradient(180deg, var(--glass-sheen) 0%, transparent 55%),
+      var(--glass-bg-strong);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(40px) saturate(170%);
+    backdrop-filter: blur(40px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+      inset 0 -1px 0 var(--glass-inner-shadow),
+      0 0 0 0.5px var(--glass-ring),
+      0 2px 6px rgba(0, 0, 0, 0.14),
+      0 22px 44px -12px var(--glass-shadow);
+  }
+
+  /* Glass input — recessed */
+  .glass-input {
+    background: var(--input-bg);
+    border: 1px solid var(--hairline);
+    color: var(--fg);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow:
+      inset 0 1px 3px rgba(0, 0, 0, 0.22),
+      inset 0 -1px 0 var(--glass-highlight);
+    transition:
+      border-color 200ms ease,
+      box-shadow 250ms ease,
+      background-color 200ms ease;
+  }
+  .glass-input::placeholder {
+    color: var(--fg-muted);
+  }
+  .glass-input:focus {
+    outline: none;
+    border-color: var(--focus);
+    box-shadow:
+      inset 0 1px 3px rgba(0, 0, 0, 0.22),
+      0 0 0 3px color-mix(in srgb, var(--focus) 28%, transparent),
+      0 0 22px -4px color-mix(in srgb, var(--focus) 45%, transparent);
+  }
+  .glass-input[aria-invalid="true"] {
+    border-color: var(--bad);
+  }
+
+  /* Glass button — pressable */
+  .glass-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg);
+    background: linear-gradient(180deg, var(--glass-sheen), transparent 70%), var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      0 0 0 0.5px var(--glass-ring),
+      0 6px 14px -6px var(--glass-shadow);
+    transition:
+      transform 200ms ease,
+      background-color 200ms ease,
+      box-shadow 250ms ease,
+      opacity 200ms ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .glass-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background-color: var(--glass-bg-strong);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      0 0 0 0.5px var(--glass-ring),
+      0 10px 20px -6px var(--glass-shadow);
+  }
+  .glass-button:active:not(:disabled) {
+    transform: translateY(0) scale(0.985);
+    box-shadow:
+      inset 0 2px 5px rgba(0, 0, 0, 0.28),
+      0 0 0 0.5px var(--glass-ring);
+  }
+  .glass-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .glass-button--primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+    border-color: transparent;
+    font-weight: 600;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 8px 18px -8px var(--glass-shadow);
+  }
+  .glass-button--primary:hover:not(:disabled) {
+    background: var(--accent);
+    filter: brightness(1.06);
+  }
+  .glass-button--icon {
+    min-width: 44px;
+    padding: 0;
+    border-radius: 12px;
+  }
+  @media (min-width: 640px) {
+    .glass-button--icon-sm {
+      min-height: 36px;
+      min-width: 36px;
+    }
+  }
+
+  /* Deep Glass — dialogs / dropdowns */
+  .glass-overlay {
+    background: linear-gradient(160deg, var(--glass-sheen), transparent 35%), var(--glass-bg-deep);
+    border: 1px solid var(--glass-border);
+    color: var(--fg);
+    -webkit-backdrop-filter: blur(40px) saturate(170%);
+    backdrop-filter: blur(40px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      0 0 0 0.5px var(--glass-ring),
+      0 40px 80px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  .glass-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hairline) 15%, var(--hairline) 85%, transparent);
+    box-shadow: 0 1px 0 var(--glass-sheen);
+  }
+
+  /* Skeleton */
+  .glass-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--muted-surface);
+    border: 1px solid var(--hairline);
+  }
+  .glass-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--glass-sheen), transparent);
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+dialog.glass-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* ───────── Fallbacks & preferences ───────── */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-panel,
+  .glass-floating,
+  .glass-overlay,
+  .glass-button,
+  .glass-surface {
+    background: var(--glass-fallback);
+  }
+  .glass-button--primary {
+    background: var(--accent);
+  }
+  .glass-input {
+    background: var(--input-bg);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel,
+  .glass-floating,
+  .glass-overlay,
+  .glass-surface,
+  .glass-button:not(.glass-button--primary) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--glass-fallback);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .glass-skeleton::after {
+    display: none;
+  }
+}
